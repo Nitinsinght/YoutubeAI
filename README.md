@@ -4,6 +4,8 @@
 
 A fully automated pipeline that generates, produces, and uploads high-quality YouTube Shorts videos without human intervention. The system creates original AI-generated videos, adds subtitles and narration, and uploads them automatically to YouTube.
 
+> **📖 New here?** Read the **[Complete Guide (GUIDE.md)](GUIDE.md)** for a full explanation of what was built, how to use it, and what to do next.
+
 ## Features
 
 - **AI Script Generation** — Generates viral video ideas, scripts, titles, and hashtags using OpenAI
@@ -42,11 +44,12 @@ YoutubeAI/
 ├── run_bot.py           # Main automation loop
 ├── requirements.txt     # Python dependencies
 ├── .env.example         # Environment configuration template
+├── GUIDE.md             # Complete setup guide and roadmap
 └── tests/
     └── test_pipeline.py # Unit tests
 ```
 
-## Setup
+## Quick Start
 
 ### 1. Install Dependencies
 
@@ -54,42 +57,38 @@ YoutubeAI/
 pip install -r requirements.txt
 ```
 
-### 2. Configure Environment
+Also install **ffmpeg** (needed by MoviePy for video encoding):
 
-Copy the example environment file and fill in your API keys:
+```bash
+# Ubuntu/Debian
+sudo apt install ffmpeg
+
+# macOS
+brew install ffmpeg
+```
+
+### 2. Configure Environment
 
 ```bash
 cp .env.example .env
+# Edit .env with your API keys
 ```
 
-Required API keys:
-
-| Key | Purpose |
-|-----|---------|
-| `OPENAI_API_KEY` | Script generation (required) |
-| `RUNWAY_API_KEY` | Video generation with Runway (if using Runway) |
-| `PIKA_API_KEY` | Video generation with Pika (if using Pika) |
-| `SVD_API_URL` | Stable Video Diffusion endpoint (if using SVD) |
+| Key | Required | Purpose |
+|-----|----------|---------|
+| `OPENAI_API_KEY` | **Yes** | Script generation |
+| `RUNWAY_API_KEY` | If using Runway | Video generation |
+| `PIKA_API_KEY` | If using Pika | Video generation |
+| `SVD_API_URL` | If using SVD | Local video generation endpoint |
 
 ### 3. Set Up YouTube OAuth
 
 1. Create a project in the [Google Cloud Console](https://console.cloud.google.com/)
 2. Enable the YouTube Data API v3
 3. Create OAuth 2.0 credentials (Desktop application)
-4. Download the client secrets JSON file
-5. Save it as `client_secrets.json` in the project root
+4. Download the client secrets JSON and save as `client_secrets.json`
 
-### 4. Choose a Video Provider
-
-Set `VIDEO_PROVIDER` in your `.env` file:
-
-- `runway` — Runway Gen API
-- `pika` — Pika API
-- `stable_video_diffusion` — Local or remote SVD endpoint
-
-## Usage
-
-### Run the Bot
+### 4. Run the Bot
 
 ```bash
 python run_bot.py
@@ -103,10 +102,11 @@ The bot will continuously:
 5. Upload to YouTube
 6. Wait the configured delay and repeat
 
-### Configuration Options
+## Configuration
 
 | Environment Variable | Default | Description |
 |---------------------|---------|-------------|
+| `VIDEO_PROVIDER` | `stable_video_diffusion` | `runway`, `pika`, or `stable_video_diffusion` |
 | `PRODUCTION_DELAY_SECONDS` | `3600` | Seconds between video productions |
 | `MAX_VIDEOS_PER_DAY` | `20` | Maximum videos to produce per day |
 | `VOICE_NAME` | `en-US-GuyNeural` | TTS voice for narration |
@@ -135,3 +135,8 @@ upload_video.py       →  Upload to YouTube Shorts
         ↓
 run_bot.py            →  Wait → Repeat
 ```
+
+## Documentation
+
+- **[GUIDE.md](GUIDE.md)** — Complete guide: what was built, how to use it, and what to do next
+- **[.env.example](.env.example)** — Environment configuration template with all available settings
