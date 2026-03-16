@@ -1,0 +1,26 @@
+# ── Core AI / API clients ────────────────────────────────────────────────────
+openai>=1.30.0                 # Script generation (GPT-4o) + OpenAI TTS
+requests>=2.31.0               # HTTP calls for Runway / Pika APIs
+
+# ── Video composition ────────────────────────────────────────────────────────
+moviepy>=1.0.3                 # Video editing: resize, crop, loop, subtitle burn
+Pillow>=10.0.0                 # Image manipulation (used by moviepy & SVD pipeline)
+numpy>=1.26.0                  # Array operations (used by moviepy & imageio)
+
+# ── YouTube upload ───────────────────────────────────────────────────────────
+google-api-python-client>=2.130.0
+google-auth>=2.29.0
+google-auth-oauthlib>=1.2.0
+
+# ── Optional: ElevenLabs TTS ─────────────────────────────────────────────────
+# Required only when TTS_BACKEND=elevenlabs
+elevenlabs>=1.2.0
+
+# ── Optional: Stable Video Diffusion (local GPU backend) ─────────────────────
+# Required only when VIDEO_BACKEND=stable_video
+# Uncomment if you want to run SVD locally:
+# torch>=2.3.0
+# diffusers>=0.28.0
+# transformers>=4.40.0
+# accelerate>=0.30.0
+# imageio[ffmpeg]>=2.34.0
