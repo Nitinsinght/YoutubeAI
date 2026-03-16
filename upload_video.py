@@ -84,9 +84,6 @@ def upload_video(video_path, title, description, tags=None,
         "status": {
             "privacyStatus": privacy,
             "selfDeclaredMadeForKids": False,
-            "shorts": {
-                "isShort": True,
-            },
         },
     }
 
@@ -94,7 +91,7 @@ def upload_video(video_path, title, description, tags=None,
         video_path,
         mimetype="video/mp4",
         resumable=True,
-        chunksize=256 * 1024,
+        chunksize=10 * 1024 * 1024,
     )
 
     request = youtube.videos().insert(

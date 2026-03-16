@@ -60,6 +60,10 @@ PRODUCTION_DELAY_SECONDS = int(os.getenv("PRODUCTION_DELAY_SECONDS", "3600"))
 # Maximum videos per day
 MAX_VIDEOS_PER_DAY = int(os.getenv("MAX_VIDEOS_PER_DAY", "20"))
 
+# --- Video composition ---
+# Extra padding (seconds) added after audio ends before trimming
+VIDEO_AUDIO_PADDING_SECONDS = 0.5
+
 # --- OpenAI model ---
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4")
 

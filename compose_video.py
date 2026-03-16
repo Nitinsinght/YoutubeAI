@@ -43,7 +43,7 @@ def compose_video(scene_paths, audio_path, script_data, output_path=None):
     video_clips = []
     for path in scene_paths:
         clip = VideoFileClip(path)
-        clip = clip.resized((config.VIDEO_WIDTH, config.VIDEO_HEIGHT))
+        clip = _resize_to_vertical(clip)
         video_clips.append(clip)
 
     if len(video_clips) == 1:
@@ -56,7 +56,8 @@ def compose_video(scene_paths, audio_path, script_data, output_path=None):
     if base_video.duration < audio_clip.duration:
         base_video = base_video.loop(duration=audio_clip.duration)
     elif base_video.duration > audio_clip.duration + 1:
-        base_video = base_video.subclipped(0, audio_clip.duration + 0.5)
+        padding = config.VIDEO_AUDIO_PADDING_SECONDS
+        base_video = base_video.subclipped(0, audio_clip.duration + padding)
 
     base_video = base_video.with_audio(audio_clip)
 
@@ -82,6 +83,44 @@ def compose_video(scene_paths, audio_path, script_data, output_path=None):
     final.close()
 
     return output_path
+
+
+def _resize_to_vertical(clip):
+    """Resize a clip to vertical format preserving aspect ratio.
+
+    Scales the clip to fill the target vertical dimensions, cropping
+    the excess rather than distorting the image.
+
+    Args:
+        clip: A MoviePy VideoFileClip to resize.
+
+    Returns:
+        VideoFileClip: The resized clip at VIDEO_WIDTH x VIDEO_HEIGHT.
+    """
+    target_w = config.VIDEO_WIDTH
+    target_h = config.VIDEO_HEIGHT
+    target_ratio = target_w / target_h
+
+    clip_ratio = clip.w / clip.h
+
+    if clip_ratio > target_ratio:
+        # Clip is wider: scale by height, crop width
+        clip = clip.resized(height=target_h)
+        excess = clip.w - target_w
+        if excess > 0:
+            clip = clip.cropped(
+                x1=excess // 2, x2=clip.w - (excess - excess // 2)
+            )
+    else:
+        # Clip is taller: scale by width, crop height
+        clip = clip.resized(width=target_w)
+        excess = clip.h - target_h
+        if excess > 0:
+            clip = clip.cropped(
+                y1=excess // 2, y2=clip.h - (excess - excess // 2)
+            )
+
+    return clip
 
 
 def _create_subtitle_clips(script_data, total_duration):
@@ -167,7 +206,7 @@ def compose_video_with_timestamps(scene_paths, audio_path, timestamps,
     video_clips = []
     for path in scene_paths:
         clip = VideoFileClip(path)
-        clip = clip.resized((config.VIDEO_WIDTH, config.VIDEO_HEIGHT))
+        clip = _resize_to_vertical(clip)
         video_clips.append(clip)
 
     if len(video_clips) == 1:

@@ -76,7 +76,7 @@ def generate_video_scenes(script_data, output_dir=None):
     else:
         prompts = script_data.get("visual_prompts", [])
         total_duration = script_data.get("duration", 15)
-        scene_duration = max(3, total_duration // max(len(prompts), 1))
+        scene_duration = total_duration / max(len(prompts), 1)
 
         for i, prompt in enumerate(prompts):
             scene_id = uuid.uuid4().hex[:8]
